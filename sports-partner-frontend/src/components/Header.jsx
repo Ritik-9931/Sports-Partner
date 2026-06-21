@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Menu, X, Users, Trophy, Calendar, User, LogOut } from "lucide-react";
+import {
+  Menu,
+  X,
+  Users,
+  Trophy,
+  Calendar,
+  User,
+  LogOut,
+  AppWindowMacIcon,
+} from "lucide-react";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../redux/slices/authSlice";
 
@@ -16,6 +25,8 @@ const Header = () => {
     dispatch(logoutUser());
     navigate("/login");
   };
+
+  console.log(user);
 
   const navStyle = ({ isActive }) =>
     `flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
@@ -51,6 +62,12 @@ const Header = () => {
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-3">
+            {user?.role === "admin" && (
+              <NavLink to="/admin/dashboard" className={navStyle}>
+                Admin Panel
+              </NavLink>
+            )}
+
             <NavLink to="/" end className={navStyle}>
               Home
             </NavLink>
@@ -127,6 +144,17 @@ const Header = () => {
                 <p className="text-sm text-gray-500">{user?.email}</p>
               </div>
             </div>
+
+            {user?.role === "admin" && (
+              <NavLink
+                to="/admin/dashboard"
+                onClick={() => setMenuOpen(false)}
+                className={navStyle}
+              >
+                <AppWindowMacIcon size={18} />
+                Admin Panel
+              </NavLink>
+            )}
 
             <NavLink
               to="/"
