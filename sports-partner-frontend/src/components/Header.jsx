@@ -26,8 +26,6 @@ const Header = () => {
     navigate("/login");
   };
 
-  console.log(user);
-
   const navStyle = ({ isActive }) =>
     `flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
       isActive

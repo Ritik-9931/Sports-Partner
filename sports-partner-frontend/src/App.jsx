@@ -22,6 +22,9 @@ import CommunityDetail from "./pages/CommunityDetail";
 import Partners from "./pages/Partners";
 import ViewProfile from "./pages/ViewProfile";
 import PlayRequests from "./pages/playRequest";
+import OTPProtectedRoute from "./routes/OTPprotectedRoute";
+import OTPSystem from "./components/OTPSystem";
+import UpdateUser from "./pages/UpdateUser";
 
 const App = () => {
   useEffect(() => {
@@ -188,6 +191,18 @@ const App = () => {
     {
       path: "register",
       element: <Register />,
+    },
+    {
+      path: "otp-generate",
+      element: <OTPSystem />,
+    },
+    {
+      path: "updatePass",
+      element: (
+        <OTPProtectedRoute>
+          <UpdateUser />
+        </OTPProtectedRoute>
+      ),
     },
   ]);
   return <RouterProvider router={myRouter} />;

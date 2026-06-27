@@ -37,17 +37,11 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-purple-100 px-4">
-      
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg shadow-2xl rounded-3xl p-8 border border-gray-100">
-
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">
-            Welcome Back 👋
-          </h2>
-          <p className="text-gray-500 mt-2">
-            Login to continue your journey
-          </p>
+          <h2 className="text-3xl font-bold text-gray-800">Welcome Back 👋</h2>
+          <p className="text-gray-500 mt-2">Login to continue your journey</p>
         </div>
 
         {/* Error */}
@@ -59,7 +53,6 @@ const Login = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {/* Email */}
           <div>
             <label className="text-sm text-gray-600">Email</label>
@@ -87,6 +80,16 @@ const Login = () => {
               required
             />
           </div>
+
+          <p className="text-right text-sm">
+            Forgot your password?{" "}
+            <b
+              className="cursor-pointer text-blue-800"
+              onClick={() => navigate(`/otp-generate`)}
+            >
+              Reset Password
+            </b>
+          </p>
 
           {/* Button */}
           <button
