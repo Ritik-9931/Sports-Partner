@@ -22,7 +22,7 @@ import CommunityDetail from "./pages/CommunityDetail";
 import Partners from "./pages/Partners";
 import ViewProfile from "./pages/ViewProfile";
 import PlayRequests from "./pages/playRequest";
-import OTPProtectedRoute from "./routes/OTPprotectedRoute";
+import OTPProtectedRoute from "./routes/OTPProtectedRoute";
 import OTPSystem from "./components/OTPSystem";
 import UpdateUser from "./pages/UpdateUser";
 
