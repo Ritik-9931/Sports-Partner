@@ -2,7 +2,6 @@ import HeroSection from "../components/home/HeroSection";
 import PopularGames from "../components/home/PopularGames";
 import NearbyPlayers from "../components/home/NearbyPlayers";
 import Communities from "../components/home/Communities";
-import Testimonials from "../components/home/Testimonials";
 import CTASection from "../components/home/CTASection";
 
 const Home = () => {
@@ -13,7 +12,6 @@ const Home = () => {
       <PopularGames />
       <NearbyPlayers />
       <Communities />
-      <Testimonials />
       <CTASection />
     </div>
   );
