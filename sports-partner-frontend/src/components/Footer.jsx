@@ -50,7 +50,7 @@ const Footer = () => {
               </li>
 
               <li>
-                <Link to="/events" className="hover:text-blue-400 transition">
+                <Link to="/communities" className="hover:text-blue-400 transition">
                   Events
                 </Link>
               </li>
@@ -85,12 +85,7 @@ const Footer = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-2">
                 <LuMail size={16} />
-                support@sportsmate.com
-              </div>
-
-              <div className="flex items-center gap-2">
-                <LuPhone size={16} />
-                +91 9876543210
+                sportpartner54@gmail.com
               </div>
 
               <div className="flex items-center gap-2">
