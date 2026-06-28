@@ -101,12 +101,6 @@ const PopularGames = () => {
                 <p className="text-gray-500 mt-2">
                   {game.players}
                 </p>
-
-                {/* Button */}
-                <button className="mt-6 flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-4 transition-all">
-                  Explore
-                  <ArrowRight size={18} />
-                </button>
               </div>
             </div>
           ))}
