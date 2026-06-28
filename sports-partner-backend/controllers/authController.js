@@ -4,7 +4,6 @@ import generateToken from "../utils/generateToken.js";
 import cloudinary from "../config/cloudinary.js";
 import sendEmail from "../utils/sendEmail.js";
 import otpGenerator from "otp-generator";
-import validator from "validator";
 
 export const registerUser = async (req, res) => {
   try {
@@ -28,13 +27,6 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "User already exists",
-      });
-    }
-
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({
-        success: false,
-        message: "Please enter a valid email address",
       });
     }
 
