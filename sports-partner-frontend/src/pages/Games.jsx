@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGames } from "../redux/slices/gameSlice";
+import {
+  fetchGames,
+  createGame,
+  updateGame,
+  deleteGame,
+} from "../redux/slices/gameSlice";
+import { fetchProfile } from "../redux/slices/userSlice";
 
 const Games = () => {
   const dispatch = useDispatch();
@@ -10,9 +16,30 @@ const Games = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
+  const { profile } = useSelector((state) => state.userInfo);
+
+  const isAdmin = profile?.role === "admin";
+
+  const [showForm, setShowForm] = useState(false);
+
+  const [editingGame, setEditingGame] = useState(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "Indoor",
+    icon: "",
+  });
+
   useEffect(() => {
+    dispatch(fetchProfile());
     dispatch(fetchGames());
   }, [dispatch]);
+
+  const userId = profile?._id;
+
+  const canManageGame = (game) =>
+    profile?.role === "admin" ||
+    String(game.creator?._id || game.creator) === String(userId);
 
   const filteredGames = games.filter((game) => {
     const matchSearch = game.name?.toLowerCase().includes(search.toLowerCase());
@@ -39,7 +66,17 @@ const Games = () => {
           </div>
         </div>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-[1fr_auto]">
+        <button
+          onClick={() => {
+            setEditingGame(null);
+            setShowForm(true);
+          }}
+          className="rounded-lg bg-violet-600 px-5 py-2 text-white"
+        >
+          + Add Game
+        </button>
+
+        <div className="my-6 grid gap-4 md:grid-cols-[1fr_auto]">
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
             <input
               type="text"
@@ -111,6 +148,42 @@ const Games = () => {
                       : ""}
                   </span>
                 </div>
+
+                <p className="mt-2 text-sm text-slate-400">
+                  Added by {game.creator?.name || "Unknown"}
+                </p>
+
+                {canManageGame && (
+                  <div className="mt-5 flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingGame(game);
+
+                        setFormData({
+                          name: game.name,
+                          category: game.category,
+                          icon: game.icon,
+                        });
+
+                        setShowForm(true);
+                      }}
+                      className="rounded bg-blue-600 px-3 py-2 text-sm"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={async () => {
+                        if (!window.confirm("Delete game?")) return;
+
+                        await dispatch(deleteGame(game._id)).unwrap();
+                      }}
+                      className="rounded bg-red-600 px-3 py-2 text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
 
@@ -122,6 +195,92 @@ const Games = () => {
           </div>
         )}
       </div>
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="w-full max-w-lg rounded-xl bg-slate-900 p-6">
+            <h2 className="mb-5 text-2xl font-bold">
+              {editingGame ? "Update Game" : "Create Game"}
+            </h2>
+
+            <input
+              type="text"
+              placeholder="Game Name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  name: e.target.value,
+                })
+              }
+              className="mb-4 w-full rounded bg-slate-800 p-3"
+            />
+
+            <select
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  category: e.target.value,
+                })
+              }
+              className="mb-4 w-full rounded bg-slate-800 p-3"
+            >
+              <option>Indoor</option>
+              <option>Outdoor</option>
+            </select>
+
+            <input
+              type="text"
+              placeholder="Icon URL"
+              value={formData.icon}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  icon: e.target.value,
+                })
+              }
+              className="mb-6 w-full rounded bg-slate-800 p-3"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowForm(false)}
+                className="rounded bg-gray-700 px-5 py-2"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={async () => {
+                  try {
+                    if (editingGame) {
+                      await dispatch(
+                        updateGame({
+                          id: editingGame._id,
+                          formData,
+                        }),
+                      ).unwrap();
+
+                      alert("Game updated");
+                    } else {
+                      await dispatch(createGame(formData)).unwrap();
+
+                      alert("Game created");
+                    }
+
+                    setShowForm(false);
+                  } catch (err) {
+                    alert(err);
+                  }
+                }}
+                className="rounded bg-violet-600 px-5 py-2"
+              >
+                {editingGame ? "Update" : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

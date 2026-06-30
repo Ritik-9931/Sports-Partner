@@ -6,6 +6,7 @@ const gameSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
 
     category: {
@@ -15,13 +16,16 @@ const gameSchema = new mongoose.Schema(
     },
 
     icon: String,
+
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-const Game = mongoose.model("Game", gameSchema);
-
-export default Game;
-  
+export default mongoose.model("Game", gameSchema);

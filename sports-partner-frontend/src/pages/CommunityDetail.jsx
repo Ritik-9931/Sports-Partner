@@ -12,6 +12,7 @@ import {
   unblockUserFromCommunity,
 } from "../redux/slices/communitySlice";
 import { fetchProfile } from "../redux/slices/userSlice";
+import CommunityPosts from "../components/CommunityPosts";
 
 const CommunityDetail = () => {
   const { id } = useParams();
@@ -140,18 +141,43 @@ const CommunityDetail = () => {
 
                     <div className="flex gap-3">
                       <button
-                        onClick={() =>
-                          dispatch(approveCommunityJoinRequest(request._id))
-                        }
+                        onClick={async () => {
+                          try {
+                            await dispatch(
+                              approveCommunityJoinRequest(request._id),
+                            ).unwrap();
+
+                            // Refresh join requests
+                            dispatch(fetchCommunityJoinRequests(community._id));
+
+                            // Refresh community (updates member list)
+                            dispatch(fetchCommunityById(community._id));
+
+                            alert("Join request approved successfully");
+                          } catch (error) {
+                            alert(error);
+                          }
+                        }}
                         className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
                       >
                         Approve
                       </button>
 
                       <button
-                        onClick={() =>
-                          dispatch(rejectCommunityJoinRequest(request._id))
-                        }
+                        onClick={async () => {
+                          try {
+                            await dispatch(
+                              rejectCommunityJoinRequest(request._id),
+                            ).unwrap();
+
+                            // Refresh join requests
+                            dispatch(fetchCommunityJoinRequests(community._id));
+
+                            alert("Join request rejected successfully");
+                          } catch (error) {
+                            alert(error);
+                          }
+                        }}
                         className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
                       >
                         Reject
@@ -216,9 +242,7 @@ const CommunityDetail = () => {
               <div className="flex gap-3">
                 {canManage ? (
                   <button
-                    onClick={() =>
-                      navigate(`/communities/edit/${community._id}`)
-                    }
+                    onClick={() => navigate(`/edit-community/${community._id}`)}
                     className="rounded-lg bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-600"
                   >
                     Edit
@@ -240,6 +264,16 @@ const CommunityDetail = () => {
             </div>
           </div>
         </div>
+        
+        {(isMember || isCreator || isAdmin) && (
+          <CommunityPosts
+            community={community}
+            profile={profile}
+            isCreator={isCreator}
+            isAdmin={isAdmin}
+            isMember={isMember}
+          />
+        )}
 
         <div className="rounded-lg border border-slate-800 bg-slate-900 p-6">
           <div className="mb-5 flex items-center justify-between">
@@ -294,14 +328,23 @@ const CommunityDetail = () => {
                 {(isCreator || isAdmin) &&
                   String(member._id) !== String(userId) && (
                     <button
-                      onClick={() =>
-                        dispatch(
-                          blockUserFromCommunity({
-                            communityId: community._id,
-                            userId: member._id,
-                          }),
-                        )
-                      }
+                      onClick={async () => {
+                        try {
+                          await dispatch(
+                            blockUserFromCommunity({
+                              communityId: community._id,
+                              userId: member._id,
+                            }),
+                          ).unwrap();
+
+                          // Refresh community data
+                          dispatch(fetchCommunityById(community._id));
+
+                          alert("User blocked successfully");
+                        } catch (error) {
+                          alert(error);
+                        }
+                      }}
                       className="mt-4 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600"
                     >
                       Block User
@@ -333,14 +376,22 @@ const CommunityDetail = () => {
                   <p className="text-sm text-slate-400">{user.email}</p>
 
                   <button
-                    onClick={() =>
-                      dispatch(
-                        unblockUserFromCommunity({
-                          communityId: community._id,
-                          userId: user._id,
-                        }),
-                      )
-                    }
+                    onClick={async () => {
+                      try {
+                        await dispatch(
+                          unblockUserFromCommunity({
+                            communityId: community._id,
+                            userId: user._id,
+                          }),
+                        ).unwrap();
+
+                        dispatch(fetchCommunityById(community._id));
+
+                        alert("User unblocked successfully");
+                      } catch (error) {
+                        alert(error);
+                      }
+                    }}
                     className="mt-4 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
                   >
                     Unblock User

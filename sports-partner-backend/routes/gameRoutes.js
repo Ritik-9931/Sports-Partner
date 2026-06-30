@@ -11,14 +11,14 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, admin, createGame);
+router.post("/", protect, createGame);
 
 router.get("/", protect, getGames);
 
 router
   .route("/:id")
   .get(protect, getGameById)
-  .put(protect, admin, updateGame)
-  .delete(protect, admin, deleteGame);
+  .put(protect, updateGame)
+  .delete(protect, deleteGame);
 
 export default router;

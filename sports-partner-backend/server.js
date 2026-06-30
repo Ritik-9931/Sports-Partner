@@ -14,6 +14,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import gameRoutes from "./routes/gameRoutes.js";
 import communityRoutes from "./routes/communityRoutes.js";
 import playRequestRoutes from "./routes/playRequestRoutes.js";
+import communityPostRoutes from "./routes/communityPostRoutes.js";
 
 dotenv.config();
 
@@ -96,6 +97,8 @@ app.use("/api/games", gameRoutes);
 app.use("/api/communities", communityRoutes);
 
 app.use("/api/play-requests", playRequestRoutes);
+
+app.use("/api/community-posts", communityPostRoutes);
 
 const PORT = process.env.PORT || 5000;
 
